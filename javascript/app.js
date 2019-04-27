@@ -31,26 +31,19 @@ $('#addTrainBtn').on("click", function(){
         frequency: frequency,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
+});
 
-    database.ref().on("child_added", function(snapshot) {
+    database.ref().orderByChild("dateAdded").limitToLast(10).on("child_added", function(snapshot) {
 
         var snapVal = snapshot.val();
-  
 
-        console.log(snapVal.name);
-        console.log(snapVal.destination);
-        console.log(snapVal.firstTrain);
-        console.log(snapVal.frequency);
+        $("#newTrain").append("<tr><td>" + snapVal.name +
+            "</td><td>" + snapVal.destination +
+            "</td><td>" + snapVal.frequency +
+            "</td><td>" + snapVal.firstTrain + "</td></tr>");
 
-        $("#trainNameDisplay").text(snapVal.name);
-        $("#destinationDisplay").text(snapVal.destination);
-        $("#firstTrainDisplay").text(snapVal.firstTrain);
-        $("#frequancyDisplay").text(snapVal.frequency);
-  
 
-      }, function(errorObject) {
-        console.log("Errors handled: " + errorObject.code);
-      });
-
-})
+        }, function(errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+    });
 
