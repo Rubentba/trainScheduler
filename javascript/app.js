@@ -1,4 +1,7 @@
 // Initialize Firebase
+
+
+
 var config = {
     apiKey: "AIzaSyCaxe0eZx7b0jCfP8M02VP8h9G-uppDrG0",
     authDomain: "trainscheduler-926e7.firebaseapp.com",
@@ -31,18 +34,24 @@ $('#addTrainBtn').on("click", function(){
         frequency: frequency,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
+
+    $("#trainName").val("");
+    $("#destination").val("");
+    $("#firstTrain").val("");
+    $("#frequency").val("");
 });
 
 database.ref().limitToLast(10).on("child_added", function(snapshot) {
-
+    
     var snapVal = snapshot.val(),
-        firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years"),
+        firstTimeConverted = moment(snapVal.firstTrain, "HH:mm").subtract(1, "years"),
+   
         diffTime = moment().diff(moment(firstTimeConverted), "minutes"),
-        tRemainder = diffTime % frequency,
-        tMinutesTillTrain = frequency - tRemainder,
-        nextTrain = moment().add(tMinutesTillTrain, "minutes");
+        tRemainder = diffTime % snapVal.frequency,
+        tMinutesTillTrain = snapVal.frequency - tRemainder,
+        nextTrain = Math.abs(moment().add(tMinutesTillTrain, "minutes"));
 
-
+        
     $("#newTrain").append("<tr><td>" + snapVal.name +
         "</td><td>" + snapVal.destination +
         "</td><td>" + snapVal.frequency +
