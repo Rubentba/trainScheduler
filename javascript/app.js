@@ -45,7 +45,6 @@ database.ref().limitToLast(10).on("child_added", function(snapshot) {
     
     var snapVal = snapshot.val(),
         firstTimeConverted = moment(snapVal.firstTrain, "HH:mm").subtract(1, "years"),
-   
         diffTime = moment().diff(moment(firstTimeConverted), "minutes"),
         tRemainder = diffTime % snapVal.frequency,
         tMinutesTillTrain = snapVal.frequency - tRemainder,
@@ -54,9 +53,9 @@ database.ref().limitToLast(10).on("child_added", function(snapshot) {
         
     $("#newTrain").append("<tr><td>" + snapVal.name +
         "</td><td>" + snapVal.destination +
-        "</td><td>" + snapVal.frequency +
-        "</td><td>" + moment(nextTrain).format("hh:mm") +
-        "</td><td>" + tMinutesTillTrain + "</td></tr>");
+        "</td><td>" + ( snapVal.frequency + " mins" )+
+        "</td><td>" + moment(nextTrain).format('hh:mm A') +
+        "</td><td>" + (tMinutesTillTrain + " mins") + "</td></tr>");
 
     }, function(errorObject) {
         console.log("Errors handled: " + errorObject.code);
